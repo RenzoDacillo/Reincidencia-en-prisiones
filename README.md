@@ -13,6 +13,10 @@ Tarea académica, curso de inteligencia artificial aplicada 2026-2 (1INF62-1081)
 
 Bibliografía: INPE (2026). Informe estadístico febrero 2026. Recuperado de: https://siep.inpe.gob.pe/Archivos/2026/Informes%20estadisticos/informe_estadistico_febrero_2026.pdf 
 
+### Objetivo
+Debido a esta problemática, el objetivo del presente proyecto es:
+>Realizar un modelo de IA para predecir la reincidencia de reclusos en las prisiones del Perú
+
 ### Dataset
 <div align="justify">
 Obtenido del Sistema de Microdatos de la INEI (Instituto Nacional de Estadística e Informática) mediante el siguiente link: https://proyectos.inei.gob.pe/microdatos/ 
@@ -35,7 +39,7 @@ El dataset obtenido se ha dividido en 5 bases de datos, cada uno con su cantidad
 Como las bases de datos se encontraban en formato .sav, se los tuvo que transformar a archivos .csv, estos se encuentran en la carpeta **/data/raw** del presente repositorio.
 </div>
 
-### Predicción de reincidencia en las prisiones del Perú
+### Predicción de reincidencia en las prisiones del Perú (Metodología)
 <div align="justify">
   
 En primer lugar, se realiza un análisis exploratorio de datos (EDA) con el fin de seleccionar los features relevantes para el objetivo y entender la relación entre ellos, el significado de cada feature se muestra en los diccionarios de las bases de datos pues están representadas con un código en la tablas .csv. Los features se limitaran a reclusos sentenciados, por otro lado, el target es una variable booleana llamada **P220** dentro del **módulo 862**, en donde se le pregunta al interno:
