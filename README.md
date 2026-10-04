@@ -36,3 +36,11 @@ Como las bases de datos se encontraban en formato .sav, se los tuvo que transfor
 </div>
 
 ### Predicción de reincidencia en las prisiones del Perú
+<div align="justify">
+  
+En primer lugar, se realiza un análisis exploratorio de datos (EDA) con el fin de seleccionar los features relevantes para el objetivo y entender la relación entre ellos, el significado de cada feature se muestra en los diccionarios de las bases de datos pues están representadas con un código en la tablas .csv. Los features se limitaran a reclusos sentenciados, por otro lado, el target es una variable booleana llamada **P220** dentro del **módulo 862**, en donde se le pregunta al interno:
+  
+>SIN TOMAR EN CUENTA LA SENTENCIA QUE ACTUALMENTE CUMPLE: ¿EN ALGUNA OTRA OCASIÓN LO HABÍAN SENTENCIADO O PROCESADO A PENA EFECTIVA POR ALGÚN OTRO DELITO?
+
+En este caso, se trata de una respuesta cerrada y por lo tanto, booleana. Luego de examinar el dataset, se procederá a eliminar features que posean múltiples valores nulos, generar imputaciones y realizar técnicas para mejorar el balanceo entre las clases reincidente y no reincidente. Se entrenará el modelo y se evaluará con las métricas necesarias. La metodología del entrenamiento será influenciada por los papers que se muestran en la carpeta **/papers**.   
+</div>
