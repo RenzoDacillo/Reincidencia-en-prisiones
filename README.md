@@ -47,4 +47,12 @@ En primer lugar, se realiza un análisis exploratorio de datos (EDA) con el fin 
 >SIN TOMAR EN CUENTA LA SENTENCIA QUE ACTUALMENTE CUMPLE: ¿EN ALGUNA OTRA OCASIÓN LO HABÍAN SENTENCIADO O PROCESADO A PENA EFECTIVA POR ALGÚN OTRO DELITO?
 
 En este caso, se trata de una respuesta cerrada y por lo tanto, booleana. Luego de examinar el dataset, se procederá a eliminar features que posean múltiples valores nulos, generar imputaciones y realizar técnicas para mejorar el balanceo entre las clases reincidente y no reincidente. Se entrenará el modelo y se evaluará con las métricas necesarias. La metodología del entrenamiento será influenciada por los papers que se muestran en la carpeta **/papers**.   
+
+
+### Resumen de papers revisados 
+* Luis Carrasco ("Comprensión y predicción de la reincidencia en América Latina")
+  El estudio usa los censos penitenciarios anuales de Argentina (SNEEP) entre 2002 y 2023 reuniendo 86 variables sobre las características demograficas, situacion legal. conducta, etc. Definiendo como reincidente a personas que han recibido una condena y han vuelto a delinquir sin importar si fueron condenados otra vez o no, se limitan los datos a edades superiores a 21 años y eliminando variables faltantes para de esta manera obtener una muestra final de 574,409 condenados.
+  Los reincidentes fueron alrededor del 30% de esta muestra  
+
+
 </div>
