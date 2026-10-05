@@ -57,4 +57,19 @@ En este caso, se trata de una respuesta cerrada y por lo tanto, booleana. Luego 
   El accuracy de todos los modelos queda entre 0,73 y 0,76, ninguna con un valor muy alto siendo el modelo KNN el que logra la mejor sensibilidad (37%) seguido por XGBoost (27%), random forest y CART son las que obtuvieron resultados más bajos, LASSO no obtiene mejoras significativas en cuanto a la logística tradicional. Al final se obtuvieron que los predictores más importantes fueron: haber cometido un delito económico y la edad, seguido de indicadores geográficos como la jurisdicción de buenos ires, o haber estar en cárceles de Córdoba  y Mendoza.
 Los autores concluyen que los datos administrativos que las cárceles ya recopilan permiten una predicción razonable del riesgo, incluso sin historial criminal, con un desempeño comparable al de estudios previos. Estas predicciones pueden servir para focalizar programas de rehabilitación y mejorar la gestión carcelaria, por ejemplo en la asignación de pabellones y la supervisión.
 
+
+### Propuesta de modelos 
+*Regresión logística: 
+Es el estándar de comparación, entregando coeficientes y ratios, entrena rápido con decenas de miles de filas. Nos va a permitir decidir que factores aumentan la probabilidad de ser reincidente, sin embargo asume una relación lineal. 
+
+*Regresión logística con LASSO:
+Permite hacer la selección de variables al llevar coeficientes a cero, lo cual nos ayuda cuando hay muchas columnas ya que añade una penalización basada en el valor absoluto de los coeficientes del modelo, podremos reportar qué variables sobrevivieron y cuales fueron descartadas, entre las variables correlacionadas se tienden a conservar de forma arbitraria y son sensibles por lo que es necesario hacer un escalado 
+
+*Random forest:
+captura relaciones no lineales e interacciones sin especificarlas, no requiere escalar, tolera outliers y mezcla bien tipos de variables tras codificar, al dar importancia a las variables, la importancia por pureza sesga a la de alta cardinalidad sin embargo es menos interpretable que la logística y es mucho más costosa con cierto desbalance se tiende a favorecer a una clase mayoritaria.
+
+*Kneighbors (KNN): 
+No asume forma funcional y clasifica por similitud local, en base a los papers se recomienda para el uso del dataset actual, sin embargo es sensible a la escala ya que sufre con las dimensiones además de ser más lento al predecir y no da a interpretación ni importancia a las variables.
+
+
 </div>
