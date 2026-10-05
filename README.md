@@ -50,9 +50,11 @@ En este caso, se trata de una respuesta cerrada y por lo tanto, booleana. Luego 
 
 
 ### Resumen de papers revisados 
-* Luis Carrasco ("Comprensión y predicción de la reincidencia en América Latina")
+* Luis Carrasco ("Comprensión y predicción de la reincidencia en América Latina"): 
   El estudio usa los censos penitenciarios anuales de Argentina (SNEEP) entre 2002 y 2023 reuniendo 86 variables sobre las características demograficas, situacion legal. conducta, etc. Definiendo como reincidente a personas que han recibido una condena y han vuelto a delinquir sin importar si fueron condenados otra vez o no, se limitan los datos a edades superiores a 21 años y eliminando variables faltantes para de esta manera obtener una muestra final de 574,409 condenados.
-  Los reincidentes fueron alrededor del 30% de esta muestra  
-
+  Los reincidentes fueron alrededor del 30% de esta muestra, sin incluir historial criminal, sin seguimiento después de la liberación y no se han tomado en cuenta quienes cumplen penas no privativas de la libertad.
+  Los autores han hecho una comparativa entre seis modelos de clasificación entre los cuales se encuentran: regresión logística, lógica por penalización LASSO, kneighbors (KNN), árbol de decisión random forest y XGBoost, dividiendo las muestras entre un 70% para entrenamiento y 30% para pruebas por año de censo, una validación cruzada cinco folds para ajuste de hiperpárametros. También mencionan como mejoras futuras un rebalanceo y un ajuste de umbral de decisión.
+  El accuracy de todos los modelos queda entre 0,73 y 0,76, ninguna con un valor muy alto siendo el modelo KNN el que logra la mejor sensibilidad (37%) seguido por XGBoost (27%), random forest y CART son las que obtuvieron resultados más bajos, LASSO no obtiene mejoras significativas en cuanto a la logística tradicional. Al final se obtuvieron que los predictores más importantes fueron: haber cometido un delito económico y la edad, seguido de indicadores geográficos como la jurisdicción de buenos ires, o haber estar en cárceles de Córdoba  y Mendoza.
+Los autores concluyen que los datos administrativos que las cárceles ya recopilan permiten una predicción razonable del riesgo, incluso sin historial criminal, con un desempeño comparable al de estudios previos. Estas predicciones pueden servir para focalizar programas de rehabilitación y mejorar la gestión carcelaria, por ejemplo en la asignación de pabellones y la supervisión.
 
 </div>
