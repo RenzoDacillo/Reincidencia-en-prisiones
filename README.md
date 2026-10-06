@@ -57,28 +57,29 @@ En este caso, se trata de una respuesta cerrada y por lo tanto, booleana. Luego 
   El accuracy de todos los modelos queda entre 0,73 y 0,76, ninguna con un valor muy alto siendo el modelo KNN el que logra la mejor sensibilidad (37%) seguido por XGBoost (27%), random forest y CART son las que obtuvieron resultados más bajos, LASSO no obtiene mejoras significativas en cuanto a la logística tradicional. Al final se obtuvieron que los predictores más importantes fueron: haber cometido un delito económico y la edad, seguido de indicadores geográficos como la jurisdicción de buenos ires, o haber estar en cárceles de Córdoba  y Mendoza.
 Los autores concluyen que los datos administrativos que las cárceles ya recopilan permiten una predicción razonable del riesgo, incluso sin historial criminal, con un desempeño comparable al de estudios previos. Estas predicciones pueden servir para focalizar programas de rehabilitación y mejorar la gestión carcelaria, por ejemplo en la asignación de pabellones y la supervisión.
 
-* Renzo Dacillo ( "Transparent and bias-resilient AI framework for recidivism prediction using deep learning and clustering techniques in criminal justice"):
+* Renzo Dacillo ( "Transparent and bias-resilient AI framework for recidivism prediction using deep learning and clustering techniques in criminal justice"):  
   Paper que trata de predecir la reincidencia de internos, para ello se usa un dataset de 49,446 individuos sacado de _California Megan’s Law website_, se menciona quel a reincidencia de internos desgasta la confianza en la sociedad y fractura el propio tejido social, además que los costos del estado para cada recluso cada año en estados unidos se encuentra entre 30000 y 60000 dólares generando una carga financiera. Estos problemas demandan un modelo que pueda predecir la reincidencia de reclusos considerando:
   * Principio de individualización de la pena: consideración de características únicas e individuales del caso
   * Principio de transparencia y rendición de cuentas: Acusados deben poder comprender cómo los resultados de la IA influencian su sentencia.
   * Principio de no discriminación y mitigación de sesgos: Requerimiento para el uso de la IA en los sistemas de justicia, adherencia al principio de no discriminación evitando sesgos potenciales.
   * Principio de presunción de inocencia y exactitud: ‘‘it is better that ten guilty persons escape than that one innocent suffer’’.
-    Para ello, se utilizan técnicas de clustering (K-means), IA explicativa (SHAP), evitar features demográficos que sesguen el modelo y aumentar el accuracy (para evitar falsos positivos) respectivamente. El entrenamiento de la red neuronal por cada cluster, usa PCA (Análisis de componentes principales) para reducir la dimensionalidad y SMOTE para balancear los datos. A todas estas técnicas, el autor lo llama _Recidivism clustering Network (RCN)_ y explica que es más completo que modelos actuales de reincidencia como _COMPAS_. El dataset lo ha dividido en 80% para entrenamiento y 20% para validación, el accuracy obtenido fue del 75%.
+
+  Para ello, se utilizan técnicas de clustering (K-means), IA explicativa (SHAP), evitar features demográficos que sesguen el modelo y aumentar el accuracy (para evitar falsos positivos) respectivamente. El entrenamiento de la red neuronal por cada cluster, usa PCA (Análisis de componentes principales) para reducir la dimensionalidad y SMOTE para balancear los datos. A todas estas técnicas, el autor lo llama _Recidivism clustering Network (RCN)_ y explica que es más completo que modelos actuales de reincidencia como _COMPAS_. El dataset lo ha dividido en 80% para entrenamiento y 20% para validación, el accuracy obtenido fue del 75%.
 
 ### Propuesta de modelos 
-*Regresión logística: 
+***Regresión logística**: 
 Es el estándar de comparación, entregando coeficientes y ratios, entrena rápido con decenas de miles de filas. Nos va a permitir decidir que factores aumentan la probabilidad de ser reincidente, sin embargo asume una relación lineal. 
 
-*Regresión logística con LASSO:
+***Regresión logística con LASSO**:
 Permite hacer la selección de variables al llevar coeficientes a cero, lo cual nos ayuda cuando hay muchas columnas ya que añade una penalización basada en el valor absoluto de los coeficientes del modelo, podremos reportar qué variables sobrevivieron y cuales fueron descartadas, entre las variables correlacionadas se tienden a conservar de forma arbitraria y son sensibles por lo que es necesario hacer un escalado 
 
-*Random forest:
+***Random forest**:
 captura relaciones no lineales e interacciones sin especificarlas, no requiere escalar, tolera outliers y mezcla bien tipos de variables tras codificar, al dar importancia a las variables, la importancia por pureza sesga a la de alta cardinalidad sin embargo es menos interpretable que la logística y es mucho más costosa con cierto desbalance se tiende a favorecer a una clase mayoritaria.
 
-*Kneighbors (KNN): 
+***Kneighbors (KNN)**: 
 No asume forma funcional y clasifica por similitud local, en base a los papers se recomienda para el uso del dataset actual, sin embargo es sensible a la escala ya que sufre con las dimensiones además de ser más lento al predecir y no da a interpretación ni importancia a las variables.
 
-*Recidivism clustering Network (RCN), paper _Transparent and bias-resilient AI framework for recidivism prediction using deep learning and clustering techniques in criminal justice_: 
+***Recidivism clustering Network (RCN)**, paper _Transparent and bias-resilient AI framework for recidivism prediction using deep learning and clustering techniques in criminal justice_: 
  1. Preprocessing: One-hot encoding, cálculos de transformación de unidades y años.
  2.  SMOTE (Synthetic Minority Over-sampling Technique): balancear datos
  3.  PCA (Análisis de componentes principales): reducir dimensionalidad para mejorar eficiencia en el entrenamiento
