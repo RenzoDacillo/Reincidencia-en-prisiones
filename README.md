@@ -48,22 +48,77 @@ En primer lugar, se realiza un análisis exploratorio de datos (EDA) con el fin 
 
 En este caso, se trata de una respuesta cerrada y por lo tanto, booleana. Luego de examinar el dataset, se procederá a eliminar features que posean múltiples valores nulos, generar imputaciones y realizar técnicas para mejorar el balanceo entre las clases reincidente y no reincidente. Se entrenará el modelo y se evaluará con las métricas necesarias. La metodología del entrenamiento será influenciada por los papers que se muestran en la carpeta **/papers**.   
 
-
 ### Resumen de papers revisados 
-* Luis Carrasco ("Comprensión y predicción de la reincidencia en América Latina"): 
+#### Luis Carrasco
+  **Artículo:** Comprensión y predicción de la reincidencia en América Latina.
+  **Autores:** María Victoria Anauati, María Noelia Remero, Lucía Baraldi, Walter Sosa Escudero & Mariano tommasi
+  **Revista:** Inter-American Development Bank Working Paper Series (01/2026)
+
+##### Datos
   El estudio usa los censos penitenciarios anuales de Argentina (SNEEP) entre 2002 y 2023 reuniendo 86 variables sobre las características demograficas, situacion legal. conducta, etc. Definiendo como reincidente a personas que han recibido una condena y han vuelto a delinquir sin importar si fueron condenados otra vez o no, se limitan los datos a edades superiores a 21 años y eliminando variables faltantes para de esta manera obtener una muestra final de 574,409 condenados.
   Los reincidentes fueron alrededor del 30% de esta muestra, sin incluir historial criminal, sin seguimiento después de la liberación y no se han tomado en cuenta quienes cumplen penas no privativas de la libertad.
+
+##### Modelos
   Los autores han hecho una comparativa entre seis modelos de clasificación entre los cuales se encuentran: regresión logística, lógica por penalización LASSO, kneighbors (KNN), árbol de decisión random forest y XGBoost, dividiendo las muestras entre un 70% para entrenamiento y 30% para pruebas por año de censo, una validación cruzada cinco folds para ajuste de hiperpárametros. También mencionan como mejoras futuras un rebalanceo y un ajuste de umbral de decisión.
+
+##### Resultados
   El accuracy de todos los modelos queda entre 0,73 y 0,76, ninguna con un valor muy alto siendo el modelo KNN el que logra la mejor sensibilidad (37%) seguido por XGBoost (27%), random forest y CART son las que obtuvieron resultados más bajos, LASSO no obtiene mejoras significativas en cuanto a la logística tradicional. Al final se obtuvieron que los predictores más importantes fueron: haber cometido un delito económico y la edad, seguido de indicadores geográficos como la jurisdicción de buenos ires, o haber estar en cárceles de Córdoba  y Mendoza.
+  
 Los autores concluyen que los datos administrativos que las cárceles ya recopilan permiten una predicción razonable del riesgo, incluso sin historial criminal, con un desempeño comparable al de estudios previos. Estas predicciones pueden servir para focalizar programas de rehabilitación y mejorar la gestión carcelaria, por ejemplo en la asignación de pabellones y la supervisión.
 
-* Renzo Dacillo ( "Transparent and bias-resilient AI framework for recidivism prediction using deep learning and clustering techniques in criminal justice"):  
+#### Pierre Lavergne
+  **Artículo:** Which method predicts recidivism best ? A comparison of statistical, machine learning and data mining predictive models.
+  **Autores:** Nikolaj Tollenaar & Peter van der Heijden
+  **Revista:** Journal of the Royal Statistical Society (14/12/2011)
+  El estudio compara los modelos de Machine Learning y Data Mining con las técnicas estadísticas tradicionales (Regresión Logística, Análisis Discriminante Lineal) para la predicción del riesgo de reincidencia criminal (despues de delitos general, violenta u sexual)
+
+##### Datos
+  Registros oficiales del **Centro de Investigación y Documentación (WODC)** del Ministerio de Seguridad y Justicia de los Países Bajos.
+  Los datos son la población total de adultos condenados en 2005 en los Países Bajos.
+    * **Reincidencia general:** 20,000 casos con una tasa de reincidencia de 28.7% (10,000 para entrenamiento y 10,000 para prueba).
+    * **Reincidencia violenta:** 25,000 delincuentes con una tasa de reincidencia de 12.4% (utilizando igualmente conjuntos de 10,000 para entrenamiento y test).
+    * **Reincidencia sexual:** Todos los agresores sexuales (2,987 individuos) con una tasa de reincidencia de 3.8%.
+  El modelo utiliza variables estáticas : Généro, edad, edad a la primer condena, tipo de delito mas serio, pais de nacimiento, número de historicos penales
+
+##### Modelos y evaluationes
+  Probaron multiples modelos :
+  * Linear logistic regression (LR),
+  * Multivariate adaptive regression splines (MARS),
+  * Linear discriminant analysis (LDA),
+  * Flexible discriminant analysis (FDA),
+  * Recursive partitioning (rpart),
+  * Adaptive boosting,
+  * Logitboost,
+  * Neural network with one single hidden layer (nnet),
+  * Linear support vector machines (Linear SVM),
+  * K-nearest neighbours classification (K-nn),
+  * Partial least squares
+  Las evaluaciónes se basan en métricas : AUC, Accuracy (ACC), Root mean squared error (RMSE), SAR, Overall calibration error (CALerr) and Local calibration errork
+
+  * **Modelos comparados:**
+  * Modelos clásicos / paramétricos: Regresión Logística (LR), Análisis Discriminante Lineal (LDA).
+  * Árboles y ensambles: Árboles de clasificación (CART), Random Forest (RF), Boosting / AdaBoost.
+  * Otros métodos de ML: Máquinas de Vectores de Soporte (SVM), Redes Neuronales Artificiales (MLP / ANN), Naive Bayes, K-Nearest Neighbors (KNN).
+* **Métricas de evaluación:** Área bajo la curva ROC (AUC-ROC), calibración de probabilidades (Brier Score), tasa de acierto (Accuracy) en distintos umbrales de corte.
+
+##### Resultados
+  Los modelos avanzados de Machine Learning no superan de manera significativa la Regresión Logística estándar en AUC-ROC, para la reincidencia general y violenta.
+  Los modelos complejos (Random Forest, Boosting) estiman mal el porcentaje real de riesgo de reincidencia. La regresión logística sale probabilidades mucho más fideles a la realidad.
+  Los modelos lineales o penalizados estan interpretabile y transparente para tomar decisiones judiciales. Dado la similitud de resultados con los otros modelos, sus usos estan justificado.
+
+#### Renzo Dacillo
+  **Artículo:** Transparent and bias-resilient AI framework for recidivism prediction using deep learning and clustering techniques in criminal justice.
+  **Autores:** Muhammed Cavus, Muhammed Nurullah Benli, Usame Altuntas, Mahmut Sari, Huseyin Ayan & Yusuf Furkan Ugurluoglu
+  **Revista:** Applied Soft Computing Journal (April 2025)
+
+##### Objectivo y datos
   Paper que trata de predecir la reincidencia de internos, para ello se usa un dataset de 49,446 individuos sacado de _California Megan’s Law website_, se menciona quel a reincidencia de internos desgasta la confianza en la sociedad y fractura el propio tejido social, además que los costos del estado para cada recluso cada año en estados unidos se encuentra entre 30000 y 60000 dólares generando una carga financiera. Estos problemas demandan un modelo que pueda predecir la reincidencia de reclusos considerando:
   * Principio de individualización de la pena: consideración de características únicas e individuales del caso
   * Principio de transparencia y rendición de cuentas: Acusados deben poder comprender cómo los resultados de la IA influencian su sentencia.
   * Principio de no discriminación y mitigación de sesgos: Requerimiento para el uso de la IA en los sistemas de justicia, adherencia al principio de no discriminación evitando sesgos potenciales.
   * Principio de presunción de inocencia y exactitud: ‘‘it is better that ten guilty persons escape than that one innocent suffer’’.
 
+##### Modelos y resultados
   Para ello, se utilizan técnicas de clustering (K-means), IA explicativa (SHAP), evitar features demográficos que sesguen el modelo y aumentar el accuracy (para evitar falsos positivos) respectivamente. El entrenamiento de la red neuronal por cada cluster, usa PCA (Análisis de componentes principales) para reducir la dimensionalidad y SMOTE para balancear los datos. A todas estas técnicas, el autor lo llama _Recidivism clustering Network (RCN)_ y explica que es más completo que modelos actuales de reincidencia como _COMPAS_. El dataset lo ha dividido en 80% para entrenamiento y 20% para validación, el accuracy obtenido fue del 75%.
 
 ### Propuesta de modelos 
