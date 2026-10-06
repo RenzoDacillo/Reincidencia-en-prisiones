@@ -49,7 +49,7 @@ En primer lugar, se realiza un análisis exploratorio de datos (EDA) con el fin 
 En este caso, se trata de una respuesta cerrada y por lo tanto, booleana. Luego de examinar el dataset, se procederá a eliminar features que posean múltiples valores nulos, generar imputaciones y realizar técnicas para mejorar el balanceo entre las clases reincidente y no reincidente. Se entrenará el modelo y se evaluará con las métricas necesarias. La metodología del entrenamiento será influenciada por los papers que se muestran en la carpeta **/papers**.   
 
 ### Resumen de papers revisados 
-#### Luis Carrasco
+#### Luis Carrasco [1]
   * **Artículo:** Comprensión y predicción de la reincidencia en América Latina.
   * **Autores:** María Victoria Anauati, María Noelia Remero, Lucía Baraldi, Walter Sosa Escudero & Mariano tommasi
   * **Revista:** Inter-American Development Bank Working Paper Series (01/2026)
@@ -66,7 +66,7 @@ En este caso, se trata de una respuesta cerrada y por lo tanto, booleana. Luego 
   
 Los autores concluyen que los datos administrativos que las cárceles ya recopilan permiten una predicción razonable del riesgo, incluso sin historial criminal, con un desempeño comparable al de estudios previos. Estas predicciones pueden servir para focalizar programas de rehabilitación y mejorar la gestión carcelaria, por ejemplo en la asignación de pabellones y la supervisión.
 
-#### Pierre Lavergne
+#### Pierre Lavergne [2]
   * **Artículo:** Which method predicts recidivism best ? A comparison of statistical, machine learning and data mining predictive models.
   * **Autores:** Nikolaj Tollenaar & Peter van der Heijden
   * **Revista:** Journal of the Royal Statistical Society (14/12/2011)
@@ -101,7 +101,7 @@ Los autores concluyen que los datos administrativos que las cárceles ya recopil
   Los modelos complejos (Random Forest, Boosting) estiman mal el porcentaje real de riesgo de reincidencia. La regresión logística sale probabilidades mucho más fideles a la realidad.
   Los modelos lineales o penalizados estan interpretabile y transparente para tomar decisiones judiciales. Dado la similitud de resultados con los otros modelos, sus usos estan justificado.
 
-#### Renzo Dacillo
+#### Renzo Dacillo [3]
   * **Artículo:** Transparent and bias-resilient AI framework for recidivism prediction using deep learning and clustering techniques in criminal justice.
   * **Autores:** Muhammed Cavus, Muhammed Nurullah Benli, Usame Altuntas, Mahmut Sari, Huseyin Ayan & Yusuf Furkan Ugurluoglu
   * **Revista:** Applied Soft Computing Journal (April 2025)
@@ -123,13 +123,16 @@ Es el estándar de comparación, entregando coeficientes y ratios, entrena rápi
 ***Regresión logística con LASSO**:
 Permite hacer la selección de variables al llevar coeficientes a cero, lo cual nos ayuda cuando hay muchas columnas ya que añade una penalización basada en el valor absoluto de los coeficientes del modelo, podremos reportar qué variables sobrevivieron y cuales fueron descartadas, entre las variables correlacionadas se tienden a conservar de forma arbitraria y son sensibles por lo que es necesario hacer un escalado 
 
+***Árbol de decisión**:
+Es muy fácil de interpretar con reglas directas y claras. No necesita escalado de datos y captura relaciones no lineales. Sirve para comparar si Random Forest realmente vale la pena. Sin embargo, sufre mucho de sobreajuste (overfitting) y es inestable ante cambios pequeños en los datos.
+
 ***Random forest**:
-captura relaciones no lineales e interacciones sin especificarlas, no requiere escalar, tolera outliers y mezcla bien tipos de variables tras codificar, al dar importancia a las variables, la importancia por pureza sesga a la de alta cardinalidad sin embargo es menos interpretable que la logística y es mucho más costosa con cierto desbalance se tiende a favorecer a una clase mayoritaria.
+Captura relaciones no lineales e interacciones sin especificarlas, no requiere escalar, tolera outliers y mezcla bien tipos de variables tras codificar, al dar importancia a las variables, la importancia por pureza sesga a la de alta cardinalidad sin embargo es menos interpretable que la logística y es mucho más costosa con cierto desbalance se tiende a favorecer a una clase mayoritaria.
 
 ***Kneighbors (KNN)**: 
 No asume forma funcional y clasifica por similitud local, en base a los papers se recomienda para el uso del dataset actual, sin embargo es sensible a la escala ya que sufre con las dimensiones además de ser más lento al predecir y no da a interpretación ni importancia a las variables.
 
-***Recidivism clustering Network (RCN)**, paper _Transparent and bias-resilient AI framework for recidivism prediction using deep learning and clustering techniques in criminal justice_: 
+***Recidivism clustering Network (RCN)**: [3]
  1. Preprocessing: One-hot encoding, cálculos de transformación de unidades y años.
  2.  SMOTE (Synthetic Minority Over-sampling Technique): balancear datos
  3.  PCA (Análisis de componentes principales): reducir dimensionalidad para mejorar eficiencia en el entrenamiento
@@ -137,5 +140,8 @@ No asume forma funcional y clasifica por similitud local, en base a los papers s
  5.  Entrenar red neuronal para cada clúster: De esta manera se evita generalizar y se toma cada caso de manera más individual
  6.  Evaluar modelo
  7.  Mostrar resultados (t-SNE, k-means, SHAP): SHAP para determinar qué factores contribuyeron a la predicción, mejorar interpretabilidad.
+
+***Perceptrón Multicapa (MLP)**:
+Captura patrones complejos y relaciones no lineales con capas ocultas. Permite comprobar si el modelo RCN mejora los resultados frente a una red neuronal estándar. Sin embargo, MPL es difícil de interpretar, necesita escalar los datos y requiere más tiempo y esfuerzo para el entrenamiento.
  
 </div>
