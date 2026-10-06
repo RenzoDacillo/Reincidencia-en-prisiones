@@ -93,6 +93,7 @@ Los autores concluyen que los datos administrativos que las cárceles ya recopil
   * Linear support vector machines (Linear SVM),
   * K-nearest neighbours classification (K-nn),
   * Partial least squares
+
   Las evaluaciónes se basan en métricas : AUC, Accuracy (ACC), Root mean squared error (RMSE), SAR, Overall calibration error (CALerr) and Local calibration errork
 
 ##### Resultados
