@@ -50,9 +50,9 @@ En este caso, se trata de una respuesta cerrada y por lo tanto, booleana. Luego 
 
 ### Resumen de papers revisados 
 #### Luis Carrasco
-  **Artículo:** Comprensión y predicción de la reincidencia en América Latina.
-  **Autores:** María Victoria Anauati, María Noelia Remero, Lucía Baraldi, Walter Sosa Escudero & Mariano tommasi
-  **Revista:** Inter-American Development Bank Working Paper Series (01/2026)
+  * **Artículo:** Comprensión y predicción de la reincidencia en América Latina.
+  * **Autores:** María Victoria Anauati, María Noelia Remero, Lucía Baraldi, Walter Sosa Escudero & Mariano tommasi
+  * **Revista:** Inter-American Development Bank Working Paper Series (01/2026)
 
 ##### Datos
   El estudio usa los censos penitenciarios anuales de Argentina (SNEEP) entre 2002 y 2023 reuniendo 86 variables sobre las características demograficas, situacion legal. conducta, etc. Definiendo como reincidente a personas que han recibido una condena y han vuelto a delinquir sin importar si fueron condenados otra vez o no, se limitan los datos a edades superiores a 21 años y eliminando variables faltantes para de esta manera obtener una muestra final de 574,409 condenados.
@@ -67,9 +67,9 @@ En este caso, se trata de una respuesta cerrada y por lo tanto, booleana. Luego 
 Los autores concluyen que los datos administrativos que las cárceles ya recopilan permiten una predicción razonable del riesgo, incluso sin historial criminal, con un desempeño comparable al de estudios previos. Estas predicciones pueden servir para focalizar programas de rehabilitación y mejorar la gestión carcelaria, por ejemplo en la asignación de pabellones y la supervisión.
 
 #### Pierre Lavergne
-  **Artículo:** Which method predicts recidivism best ? A comparison of statistical, machine learning and data mining predictive models.
-  **Autores:** Nikolaj Tollenaar & Peter van der Heijden
-  **Revista:** Journal of the Royal Statistical Society (14/12/2011)
+  * **Artículo:** Which method predicts recidivism best ? A comparison of statistical, machine learning and data mining predictive models.
+  * **Autores:** Nikolaj Tollenaar & Peter van der Heijden
+  * **Revista:** Journal of the Royal Statistical Society (14/12/2011)
   El estudio compara los modelos de Machine Learning y Data Mining con las técnicas estadísticas tradicionales (Regresión Logística, Análisis Discriminante Lineal) para la predicción del riesgo de reincidencia criminal (despues de delitos general, violenta u sexual)
 
 ##### Datos
@@ -95,21 +95,15 @@ Los autores concluyen que los datos administrativos que las cárceles ya recopil
   * Partial least squares
   Las evaluaciónes se basan en métricas : AUC, Accuracy (ACC), Root mean squared error (RMSE), SAR, Overall calibration error (CALerr) and Local calibration errork
 
-  * **Modelos comparados:**
-  * Modelos clásicos / paramétricos: Regresión Logística (LR), Análisis Discriminante Lineal (LDA).
-  * Árboles y ensambles: Árboles de clasificación (CART), Random Forest (RF), Boosting / AdaBoost.
-  * Otros métodos de ML: Máquinas de Vectores de Soporte (SVM), Redes Neuronales Artificiales (MLP / ANN), Naive Bayes, K-Nearest Neighbors (KNN).
-* **Métricas de evaluación:** Área bajo la curva ROC (AUC-ROC), calibración de probabilidades (Brier Score), tasa de acierto (Accuracy) en distintos umbrales de corte.
-
 ##### Resultados
   Los modelos avanzados de Machine Learning no superan de manera significativa la Regresión Logística estándar en AUC-ROC, para la reincidencia general y violenta.
   Los modelos complejos (Random Forest, Boosting) estiman mal el porcentaje real de riesgo de reincidencia. La regresión logística sale probabilidades mucho más fideles a la realidad.
   Los modelos lineales o penalizados estan interpretabile y transparente para tomar decisiones judiciales. Dado la similitud de resultados con los otros modelos, sus usos estan justificado.
 
 #### Renzo Dacillo
-  **Artículo:** Transparent and bias-resilient AI framework for recidivism prediction using deep learning and clustering techniques in criminal justice.
-  **Autores:** Muhammed Cavus, Muhammed Nurullah Benli, Usame Altuntas, Mahmut Sari, Huseyin Ayan & Yusuf Furkan Ugurluoglu
-  **Revista:** Applied Soft Computing Journal (April 2025)
+  * **Artículo:** Transparent and bias-resilient AI framework for recidivism prediction using deep learning and clustering techniques in criminal justice.
+  * **Autores:** Muhammed Cavus, Muhammed Nurullah Benli, Usame Altuntas, Mahmut Sari, Huseyin Ayan & Yusuf Furkan Ugurluoglu
+  * **Revista:** Applied Soft Computing Journal (April 2025)
 
 ##### Objectivo y datos
   Paper que trata de predecir la reincidencia de internos, para ello se usa un dataset de 49,446 individuos sacado de _California Megan’s Law website_, se menciona quel a reincidencia de internos desgasta la confianza en la sociedad y fractura el propio tejido social, además que los costos del estado para cada recluso cada año en estados unidos se encuentra entre 30000 y 60000 dólares generando una carga financiera. Estos problemas demandan un modelo que pueda predecir la reincidencia de reclusos considerando:
