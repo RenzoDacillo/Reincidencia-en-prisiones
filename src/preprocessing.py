@@ -35,7 +35,7 @@ df = df[df["SITUACION_JURIDICA"] == "Sentenciado"]
 
   #Limpiar duplicados
   #Dos personas diferentes no pueden coincidir en mas de cien características
-df_sin_ids = df.drop(['ID_CARATULA','INTERNO_ID','CUEST_NRO'], axis=1)
+df_sin_ids = df.drop(columns=['ID_CARATULA', 'INTERNO_ID', 'CUEST_NRO'], errors='ignore')
 duplicados = df_sin_ids.duplicated(keep='first')
 
 df = df[~duplicados]
@@ -44,39 +44,105 @@ df = df.reset_index(drop=True)
 
 ### Crear target ###
 TARGET = "REINCIDENTE"
-p219 = df["P219"].map({"Sí": True, "No": False}) #recidiva pena suspendida
-p220 = df["P220"].map({"Sí": True, "No": False}) #recidiva pena efectiva
+p219 = df["P219"].map({"Sí": True, "Si":True, "si":True, "No": False, "no":False}) #recidiva pena suspendida
+p220 = df["P220"].map({"Sí": True, "Si":True, "si":True, "No": False, "no":False}) #recidiva pena efectiva
 df[TARGET] = (p219 | p220).astype(int)
 
 
+### Renombrar columnas ###
+
+df = df.rename(columns={
+  "DI": "DISTRITO",
+  "EST_PENIT": "PRISION",
+  "E_CIVIL": "ESTADO_CIVIL",
+  "INT_DD": "ULTIMO_DEPARTAMENTO",
+  "DELITO_GENERICO": "DELITO",
+
+  "P101": "LENGUA_MATERNA",
+  "P103_1": "LEER?",
+  "P103_2": "HABLAR?",
+  "P103_3": "ESCRIBIR?",
+  "P104_1": "NIVEL_EDUCATIVO",
+  "P104_4_CCEE": "ESTUDIOS_ESTATAL?",
+
+  "P107_8": "DEPRESION?",
+  "P107_9": "ANSIEDAD?",
+  "P107_10": "ADICCION_PSICOACTIVOS?",
+  "P109_1": "DROGAS?",
+  "P109A_1": "TIPO_DROGA",
+  "P109_2": "ALCOHOL?",
+  "P109A_2": "TIPO_ALCOHOL",
+  "P114": "HA_TRABAJADO?",
+
+  "P122": "EDAD_SIN_MAMA",
+  "P123_5": "VIVIO_SIN_ADULTA_FEMININA?",
+  "P124": "EDAD_SIN_PAPA",
+  "P125_5": "VIVIO_SIN_ADULTO_MASCULINO?",
+  "P126": "VIOLENCIA_FAMILIAR?",
+  "P127": "PADRES_ALCOHOLICOS?",
+  "P128": "PADRES_CONSUMAN_DROGA?",
+  "P129": "PADRES_VIOLENCIA_CONYUGAL?",
+  "P136": "BARRIO_DELICTIVO?",
+  "P137": "HIJOS?",
+
+  "P203": "MOTIVO",
+  "P215": "INTERNO_JUVENIL?",
+  "P303": "ESTUDIOS_PRISIONALES?",
+  "P315": "VISITAS_FAMILIARES?"
+})
+
 ### Filtrar columnas ###
-# columnas_filtradas = [
-#     "ID_CARATULA", "DD", "DI" "EST_PENIT", "GENERO", "E_CIVIL", "RELIGION", "EDAD", "NACIONALIDAD", "INT_DD", "DELITO_GENERICO",
-#     "P101", "P102", "P103_1", "P103_2", "P103_3", "P104_1", "P104_4_CCEE", "P105", "P107_8", "P107_9", "P107_10", "P109_1", "P109A_2", "P114", "P117", "P118", "P122", "P124", "P126", "P127", "P128", "P129", "P135", "P136", "P137",
-#     "P201_DI", "P203", "P215",
-#     "P303", "P315",
-#     TARGET
-# ]
 columnas_filtradas = [
-    "DI", "EST_PENIT", "GENERO", "E_CIVIL", "RELIGION", "EDAD", "NACIONALIDAD", "INT_DD", "DELITO_GENERICO",
-    "P101", "P103_1", "P103_2", "P103_3", "P104_1", "P104_4_CCEE", "P107_8", "P107_9", "P107_10", "P109_1", "P114", "P122", "P124", "P126", "P127", "P128", "P129", "P136", "P137",
-    "P203", "P215",
-    "P303", "P315",
-    TARGET
+  "DISTRITO", "PRISION", "GENERO", "ESTADO_CIVIL", "RELIGION", "EDAD", "ULTIMO_DEPARTAMENTO",
+  "DELITO",
+  "LENGUA_MATERNA", "LEER?", "HABLAR?", "ESCRIBIR?", "NIVEL_EDUCATIVO", "ESTUDIOS_ESTATAL?",
+  "DEPRESION?", "ANSIEDAD?", "ADICCION_PSICOACTIVOS?",
+  "DROGAS?", "TIPO_DROGA", "ALCOHOL?", "TIPO_ALCOHOL",
+  "HA_TRABAJADO?",
+  "EDAD_SIN_MAMA", "VIVIO_SIN_ADULTA_FEMININA?", "EDAD_SIN_PAPA", "VIVIO_SIN_ADULTO_MASCULINO?",
+  "VIOLENCIA_FAMILIAR?", "PADRES_ALCOHOLICOS?", "PADRES_CONSUMAN_DROGA?", "PADRES_VIOLENCIA_CONYUGAL?",
+  "BARRIO_DELICTIVO?", "HIJOS?",
+  "MOTIVO",
+  "INTERNO_JUVENIL?",
+  "ESTUDIOS_PRISIONALES?", "VISITAS_FAMILIARES?",
+  TARGET
+]
+columnas_filtradas_con_desbalances = [
+  "LENGUA_MATERNA", "LEER?", "HABLAR?", "ESCRIBIR?",
+  "ESTUDIOS_ESTATAL?", "DEPRESION?", "ANSIEDAD?", "ADICCION_PSICOACTIVOS?",
+  "HA_TRABAJADO?", "TIPO_ALCOHOL", "VIVIO_SIN_ADULTA_FEMININA?", "VIVIO_SIN_ADULTO_MASCULINO?",
+  "PADRES_CONSUMAN_DROGA?"
+]
+columnas_filtradas_sin_desbalances = [ # Creamos dos datasets
+    col for col in columnas_filtradas
+    if col not in columnas_filtradas_con_desbalances
 ]
 df = df[columnas_filtradas]
 
 
+### Tratamiento especifico de sub columnas ###
+df["TIPO_DROGA"] = df["TIPO_DROGA"].fillna("Ninguno")
+df["TIPO_ALCOHOL"] = df["TIPO_ALCOHOL"].fillna("Ninguno")
+df["VIVIO_SIN_ADULTA_FEMININA?"] = df["VIVIO_SIN_ADULTA_FEMININA?"].fillna("No")
+df["VIVIO_SIN_ADULTO_MASCULINO?"] = df["VIVIO_SIN_ADULTO_MASCULINO?"].fillna("No")
+
 ### Limpiar datos ###
   #99 puede significar "No sabe / No especificado"
-columns99 = ["P122", "P124"]
-for c in columns99:
-  df[c] = pd.to_numeric(df[c], errors="coerce")
-  df.loc[df[c] >= 98, c] = np.nan #reemplazado por NaN
+#columns99 = ["EDAD_SIN_MAMA", "EDAD_SIN_PAPA"]
+#for c in columns99:
+#  df[c] = pd.to_numeric(df[c], errors="coerce")
+#  df.loc[df[c] >= 98, c] = np.nan #reemplazado por NaN
+
+for col in df.columns:
+    if df[col].dtype in ['int64', 'float64']:
+        df.loc[df[col].isin([98, 99]), col] = np.nan
+    elif df[col].dtype == 'object':
+        df[col] = df[col].replace(['98', '99', '98.0', '99.0'], np.nan)
 
   #Valores atipicos reemplazadas por NaN
-columns_num = [c for c in df.select_dtypes("number") if c != TARGET]
+columns_num = ["EDAD"]
 for c in columns_num:
+    df[c] = pd.to_numeric(df[c], errors="coerce")
     q1 = df[c].quantile(0.25)
     q3 = df[c].quantile(0.75)
     iqr = q3 - q1
@@ -84,6 +150,8 @@ for c in columns_num:
     max_limit = q3 + 3 * iqr
     df.loc[(df[c] < min_limit) | (df[c] > max_limit), c] = np.nan
 
+
+############################
 #   #Verificaciones faltantes por columnas
 # missing_by_col = df.isnull().sum()
 # missing_pct_col = (missing_by_col / len(df)) * 100
@@ -102,6 +170,7 @@ for c in columns_num:
 #     'Conteo Filas': missing_by_row.value_counts().sort_index().values
 # })
 # fila_stats_df
+############################
 
   #Borrar filas con mas de 20% de columnas NaN
 columns_nan_limit = np.ceil(0.2 * len(columnas_filtradas)).astype(int)
@@ -114,26 +183,27 @@ n_after = df.shape[0]
 
   #Reemplazar los NaN por una columnas general o por la mediana
     #!!!!!!!!!!!!! fuga de datos con .median !!!!!!!!!!! hacer lo despues de separar los datos
-df["P124"] = df["P124"].fillna(df["P124"].median()) #16.34%
+df["EDAD_SIN_PAPA"] = df["EDAD_SIN_PAPA"].fillna(df["EDAD_SIN_PAPA"].median()) #16.34%
 df["INT_DD"] = df["INT_DD"].fillna("Sin respuesta") #12.07%
-df["P122"] = df["P122"].fillna(df["P122"].median()) #16.34%
-df["P104_4_CCEE"] = df["P104_4_CCEE"].fillna("Omisión") #5.22%
-df["P104_1"] = df["P104_1"].fillna("Sin respuesta") #2.68%
-df["P315"] = df["P315"].fillna("Otros") #0.11%
-df["P303"] = df["P303"].fillna("Sin respuesta") #0.11%
-df["P215"] = df["P215"].fillna("No sabe / No contesta") #0.09%
-df["P203"] = df["P203"].fillna("Sin respuesta") #0.09%
+df["EDAD_SIN_MAMA"] = df["EDAD_SIN_MAMA"].fillna(df["EDAD_SIN_MAMA"].median()) #16.34%
+df["ESTUDIOS_ESTATAL?"] = df["ESTUDIOS_ESTATAL?"].fillna("Omisión") #5.22%
+df["NIVEL_EDUCATIVO"] = df["NIVEL_EDUCATIVO"].fillna("Sin respuesta") #2.68%
+df["VISITAS_FAMILIARES?"] = df["VISITAS_FAMILIARES?"].fillna("Otros") #0.11%
+df["ESTUDIOS_PRISIONALES?"] = df["ESTUDIOS_PRISIONALES?"].fillna("Sin respuesta") #0.11%
+df["INTERNO_JUVENIL?"] = df["INTERNO_JUVENIL?"].fillna("No sabe / No contesta") #0.09%
+df["MOTIVO"] = df["MOTIVO"].fillna("Sin respuesta") #0.09%
 
 
 ### Agrupacion de categorias subrepresentadas ###
 category_cardinal_limit = 0.02  # 2%
 
-category_columns = df.select_dtypes(include=["object", "category", "str"]).columns
+category_columns = df.select_dtypes(include=["object", "category", "str"]).columns #columnas categoricas
 
 for col in category_columns:
-    frequences = df[col].value_counts(normalize=True) #tab: "category", frequence
-    rare_categories = frequences[frequences < category_cardinal_limit].index #conservar el nombre de los categorias raras
-    df[col] = df[col].replace(rare_categories, "Otros") #reemplazar los datos
+  frequences = df[col].value_counts(normalize=True) #tab: "category", frequence
+  rare_categories = frequences[frequences < category_cardinal_limit].index #nombres de los categorias raras
+  df[col] = df[col].replace(rare_categories, "Otros") #reemplazar los datos
+
 
 ### One-Hot Encoding ###
 def oneHotEncoding(data):
@@ -141,10 +211,14 @@ def oneHotEncoding(data):
 
 df_onehot = oneHotEncoding(df)
 
+df_sin_desbalances = df[columnas_filtradas_sin_desbalances]
+
 ### Exportar dataset procesado ###
-version = "02"
+version = "03"
 output_path = ROOT_DIR / ("data/processed/dataset" + version + ".csv")
 output_path_onehot = ROOT_DIR / ("data/processed/dataset" + version + "_onehot.csv")
+output_path_sin_desbalances = ROOT_DIR / ("data/processed/dataset" + version + "_sin_desbalances.csv")
 
 df.to_csv(output_path, index=False, encoding="utf-8")
-df.to_csv(output_path_onehot, index=False, encoding="utf-8")
+df_onehot.to_csv(output_path_onehot, index=False, encoding="utf-8")
+df_sin_desbalances.to_csv(output_path_sin_desbalances, index=False, encoding="utf-8")
