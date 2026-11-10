@@ -50,7 +50,6 @@ df[TARGET] = (p219 | p220).astype(int)
 
 
 ### Renombrar columnas ###
-
 df = df.rename(columns={
   "DI": "DISTRITO",
   "EST_PENIT": "PRISION",
@@ -184,7 +183,7 @@ n_after = df.shape[0]
   #Reemplazar los NaN por una columnas general o por la mediana
     #!!!!!!!!!!!!! fuga de datos con .median !!!!!!!!!!! hacer lo despues de separar los datos
 df["EDAD_SIN_PAPA"] = df["EDAD_SIN_PAPA"].fillna(df["EDAD_SIN_PAPA"].median()) #16.34%
-df["INT_DD"] = df["INT_DD"].fillna("Sin respuesta") #12.07%
+df["ULTIMO_DEPARTAMENTO"] = df["ULTIMO_DEPARTAMENTO"].fillna("Sin respuesta") #12.07%
 df["EDAD_SIN_MAMA"] = df["EDAD_SIN_MAMA"].fillna(df["EDAD_SIN_MAMA"].median()) #16.34%
 df["ESTUDIOS_ESTATAL?"] = df["ESTUDIOS_ESTATAL?"].fillna("Omisión") #5.22%
 df["NIVEL_EDUCATIVO"] = df["NIVEL_EDUCATIVO"].fillna("Sin respuesta") #2.68%
@@ -197,7 +196,7 @@ df["MOTIVO"] = df["MOTIVO"].fillna("Sin respuesta") #0.09%
 ### Agrupacion de categorias subrepresentadas ###
 category_cardinal_limit = 0.02  # 2%
 
-category_columns = df.select_dtypes(include=["object", "category", "str"]).columns #columnas categoricas
+category_columns = df.select_dtypes(include=["object", "category"]).columns #columnas categoricas
 
 for col in category_columns:
   frequences = df[col].value_counts(normalize=True) #tab: "category", frequence
