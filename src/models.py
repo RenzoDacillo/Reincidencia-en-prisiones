@@ -17,7 +17,7 @@ def obtenerModelosBase(y_train, random_state=42):
     Retorna un diccionario con los modelos base configurados para manejar
     el desbalanceo de clases (~16.5% reincidentes) sin fuga de datos.
     """
-    ratio_desbalance = float(np.sum(y_train == 0) / np.sum(y_train == 1))
+    desbalance = float(np.sum(y_train == 0) / np.sum(y_train == 1))
 
     modelos = {
         "LogisticRegression": {
@@ -46,7 +46,7 @@ def obtenerModelosBase(y_train, random_state=42):
                 learning_rate=0.05,
                 subsample=0.8,
                 colsample_bytree=0.8,
-                scale_pos_weight=ratio_desbalance,
+                scale_pos_weight=desbalance,
                 eval_metric="logloss",
                 n_jobs=-1,
                 random_state=random_state
@@ -72,25 +72,19 @@ def obtenerModelosBase(y_train, random_state=42):
     return modelos
 
 
-def entrenarModelosBase(X_train, X_train_scaled, y_train, random_state=42):
+def entrenarModelosBase(X_train_simple, X_train_scaled, y_train, random_state=42):
     """
     Entrena todos los modelos base seleccionando automaticamente X_train_scaled
     para modelos lineales y X_train sin escalar para modelos basados en arboles.
     """
-    modelos_config = obtenerModelosBase(y_train, random_state=random_state)
-    modelos_entrenados = {}
+    modelos = obtenerModelosBase(y_train, random_state=random_state)
 
-    for nombre, config in modelos_config.items():
+    for nombre, config in modelos.items():
         print(f"Entrenando modelo base: {nombre}...")
-        modelo = config["estimator"]
-        X_datos = X_train_scaled if config["requiere_escalado"] else X_train
-        modelo.fit(X_datos, y_train)
-        modelos_entrenados[nombre] = {
-            "model": modelo,
-            "requiere_escalado": config["requiere_escalado"]
-        }
+        X_train = X_train_scaled if config["requiere_escalado"] else X_train_simple
+        config["estimator"].fit(X_train, y_train)
 
-    return modelos_entrenados
+    return modelos
 
 
 def optimizarModelo(nombre_modelo, X_train, X_train_scaled, y_train, n_iter=15, cv=5, random_state=42):
@@ -98,7 +92,7 @@ def optimizarModelo(nombre_modelo, X_train, X_train_scaled, y_train, n_iter=15, 
     Optimiza hiperparametros de un modelo especifico mediante RandomizedSearchCV
     usando ROC-AUC como metrica principal y StratifiedKFold.
     """
-    ratio_desbalance = float(np.sum(y_train == 0) / np.sum(y_train == 1))
+    desbalance = float(np.sum(y_train == 0) / np.sum(y_train == 1))
     skf = StratifiedKFold(n_splits=cv, shuffle=True, random_state=random_state)
 
     if nombre_modelo == "LogisticRegression":
@@ -117,7 +111,7 @@ def optimizarModelo(nombre_modelo, X_train, X_train_scaled, y_train, n_iter=15, 
             "n_estimators": [200, 300, 400],
             "max_depth": [10, 15, 20, None],
             "min_samples_split": [2, 5, 10],
-            "min_samples_leaf": [2, 4, 8],
+            "min_samp   les_leaf": [2, 4, 8],
             "max_features": ["sqrt", "log2"]
         }
         X_datos = X_train
@@ -125,7 +119,7 @@ def optimizarModelo(nombre_modelo, X_train, X_train_scaled, y_train, n_iter=15, 
 
     elif nombre_modelo == "XGBoost":
         estimador = XGBClassifier(
-            scale_pos_weight=ratio_desbalance,
+            scale_pos_weight=desbalance,
             eval_metric="logloss",
             n_jobs=-1,
             random_state=random_state
@@ -191,6 +185,6 @@ def guardarModelo(modelo_dict, nombre_archivo):
     """
     MODELS_DIR.mkdir(parents=True, exist_ok=True)
     ruta = MODELS_DIR / nombre_archivo
-    joblib.dump(modelo_dict, ruta)
+    f.dump(modelo_dict, ruta)
     print(f"Modelo guardado exitosamente en: {ruta}")
     return ruta
