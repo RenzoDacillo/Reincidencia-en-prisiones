@@ -57,8 +57,17 @@ def probar_hyperparametros_nn(X_train, X_test, y_train, y_test, juego_hyperparam
             dropout=params["dropout"],
             lr=params["lr"]
         )
+
+        history = model.fit(
+            X_train, y_train,
+            validation_split=0.2,
+            epochs=50,
+            batch_size=params["batch_size"],
+            callbacks=[early_stop],
+            verbose=0
+        )
         
         y_pred_proba = model.predict(X_test).ravel()
         auc = roc_auc_score(y_test, y_pred_proba)
+        print(juego_hyperparametros[i])
         print(f"ROC-AUC sur Test : {auc:.4f}")
-
