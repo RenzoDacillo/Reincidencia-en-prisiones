@@ -11,7 +11,6 @@ from lightgbm import LGBMClassifier
 ROOT_DIR = Path(__file__).resolve().parent.parent
 MODELS_DIR = ROOT_DIR / "models"
 
-
 def obtenerModelosBase(y_train, random_state=42):
     """
     Retorna un diccionario con los modelos base configurados para manejar
