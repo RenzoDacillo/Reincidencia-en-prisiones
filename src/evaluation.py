@@ -81,38 +81,6 @@ def graficarMatricesConfusion(predicciones_dict, y_test):
     plt.show()
 
 
-def graficarCurvasROC_PR(predicciones_dict, y_test):
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
-
-    for nombre, preds in predicciones_dict.items():
-        y_prob = preds["y_prob"]
-        fpr, tpr, _ = roc_curve(y_test, y_prob)
-        auc_val = roc_auc_score(y_test, y_prob)
-        ax1.plot(fpr, tpr, lw=2, label=f"{nombre} (AUC = {auc_val:.4f})")
-
-        prec, rec, _ = precision_recall_curve(y_test, y_prob)
-        ap_val = average_precision_score(y_test, y_prob)
-        ax2.plot(rec, prec, lw=2, label=f"{nombre} (PR-AUC = {ap_val:.4f})")
-
-    ax1.plot([0, 1], [0, 1], "k--", lw=1, label="Azar (AUC = 0.5000)")
-    ax1.set_title("Curvas ROC Comparativas")
-    ax1.set_xlabel("Tasa de Falsos Positivos (FPR)")
-    ax1.set_ylabel("Tasa de Verdaderos Positivos (Recall)")
-    ax1.legend(loc="lower right")
-    ax1.grid(alpha=0.3)
-
-    prevalencia = y_test.mean()
-    ax2.axhline(prevalencia, color="k", linestyle="--", lw=1, label=f"Baseline ({prevalencia:.3f})")
-    ax2.set_title("Curvas Precision-Recall Comparativas")
-    ax2.set_xlabel("Recall (Sensibilidad)")
-    ax2.set_ylabel("Precision")
-    ax2.legend(loc="upper right")
-    ax2.grid(alpha=0.3)
-
-    plt.tight_layout()
-    plt.show()
-
-
 def graficarImportanciaVariables(modelo_info, feature_names, nombre_modelo, top_n=20):
     modelo = modelo_info["model"]
 
@@ -150,7 +118,6 @@ def graficarImportanciaVariables(modelo_info, feature_names, nombre_modelo, top_
 
 
 def imprimirReporteDetallado(nombre_modelo, y_test, y_pred):
-    print(f"=== Reporte de Clasificacion: {nombre_modelo} ===")
     print(classification_report(
         y_test,
         y_pred,
