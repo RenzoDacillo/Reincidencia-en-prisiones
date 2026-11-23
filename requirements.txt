@@ -1,0 +1,24 @@
+### Instalacion de dependencias ###
+
+    ## Con venv (Recomendado Python 3.11 o 3.12) ##
+# python -m venv .venv
+# Windows (PowerShell): .venv\Scripts\Activate.ps1
+# Windows (CMD):        .venv\Scripts\activate.bat
+# Mac / Linux:          source .venv/bin/activate
+# python -m pip install --upgrade pip
+# python -m pip install -r requirements.txt
+
+    ## Con conda ##
+# conda create -n reincidencia python=3.11 -y
+# conda activate reincidencia
+# pip install -r requirements.txt
+
+### Dependencias ###
+
+numpy>=2.0.0
+pandas>=2.2.0
+scikit-learn>=1.5.0
+matplotlib>=3.8.0
+seaborn>=0.13.0
+jupyter>=1.0.0
+ipykernel>=6.29.0
