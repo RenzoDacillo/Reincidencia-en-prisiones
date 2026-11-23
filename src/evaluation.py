@@ -14,19 +14,17 @@ from sklearn.metrics import (
     ConfusionMatrixDisplay,
     roc_curve,
     precision_recall_curve,
-    classification_report
+    classification_report,
 )
 
+TRESHOLD = 0.5
 
-def evaluarModelo(modelo_info, X_test, X_test_scaled, y_test, umbral=0.5):
-    """
-    Calcula todas las metricas clave de clasificacion para un modelo entrenado.
-    """
+def evaluarModelo(modelo_info, X_test, X_test_scaled, y_test):
     modelo = modelo_info["model"]
     X_datos = X_test_scaled if modelo_info["requiere_escalado"] else X_test
 
     y_prob = modelo.predict_proba(X_datos)[:, 1]
-    y_pred = (y_prob >= umbral).astype(int)
+    y_pred = (y_prob >= TRESHOLD).astype(int)
 
     metricas = {
         "Accuracy": accuracy_score(y_test, y_pred),
@@ -36,24 +34,20 @@ def evaluarModelo(modelo_info, X_test, X_test_scaled, y_test, umbral=0.5):
         "ROC-AUC": roc_auc_score(y_test, y_prob),
         "PR-AUC": average_precision_score(y_test, y_prob),
         "y_prob": y_prob,
-        "y_pred": y_pred
+        "y_pred": y_pred,
     }
     return metricas
 
 
-def compararModelos(modelos_dict, X_test, X_test_scaled, y_test, umbral=0.5):
-    """
-    Evalua multiples modelos y devuelve un DataFrame comparativo ordenado por ROC-AUC
-    junto con las probabilidades y predicciones de cada modelo.
-    """
+def compararModelos(modelos_dict, X_test, X_test_scaled, y_test):
     resultados = []
     predicciones = {}
 
     for nombre, info in modelos_dict.items():
-        res = evaluarModelo(info, X_test, X_test_scaled, y_test, umbral=umbral)
+        res = evaluarModelo(info, X_test, X_test_scaled, y_test)
         predicciones[nombre] = {
             "y_prob": res.pop("y_prob"),
-            "y_pred": res.pop("y_pred")
+            "y_pred": res.pop("y_pred"),
         }
         res["Modelo"] = nombre
         resultados.append(res)
@@ -63,22 +57,7 @@ def compararModelos(modelos_dict, X_test, X_test_scaled, y_test, umbral=0.5):
     return df_resultados, predicciones
 
 
-def encontrarMejorUmbral(y_test, y_prob):
-    """
-    Encuentra el umbral de probabilidad que maximiza el F1-Score de la clase positiva.
-    """
-    precisions, recalls, thresholds = precision_recall_curve(y_test, y_prob)
-    f1_scores = 2 * (precisions[:-1] * recalls[:-1]) / (precisions[:-1] + recalls[:-1] + 1e-10)
-    idx_mejor = np.argmax(f1_scores)
-    mejor_umbral = float(thresholds[idx_mejor])
-    mejor_f1 = float(f1_scores[idx_mejor])
-    return mejor_umbral, mejor_f1
-
-
 def graficarMatricesConfusion(predicciones_dict, y_test):
-    """
-    Grafica las matrices de confusion de todos los modelos en una cuadricula.
-    """
     n_modelos = len(predicciones_dict)
     cols = 2
     rows = int(np.ceil(n_modelos / cols))
@@ -90,7 +69,7 @@ def graficarMatricesConfusion(predicciones_dict, y_test):
         cm = confusion_matrix(y_test, preds["y_pred"])
         disp = ConfusionMatrixDisplay(
             confusion_matrix=cm,
-            display_labels=["No reincidente", "Reincidente"]
+            display_labels=["No reincidente", "Reincidente"],
         )
         disp.plot(ax=axes[idx], colorbar=False, cmap="Blues")
         axes[idx].set_title(f"Matriz de Confusion - {nombre}")
@@ -103,9 +82,6 @@ def graficarMatricesConfusion(predicciones_dict, y_test):
 
 
 def graficarCurvasROC_PR(predicciones_dict, y_test):
-    """
-    Grafica comparativamente las curvas ROC y Precision-Recall de los modelos.
-    """
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6))
 
     for nombre, preds in predicciones_dict.items():
@@ -138,9 +114,6 @@ def graficarCurvasROC_PR(predicciones_dict, y_test):
 
 
 def graficarImportanciaVariables(modelo_info, feature_names, nombre_modelo, top_n=20):
-    """
-    Grafica las top_n variables mas importantes de un modelo basado en arboles o lineal.
-    """
     modelo = modelo_info["model"]
 
     if hasattr(modelo, "feature_importances_"):
@@ -155,11 +128,18 @@ def graficarImportanciaVariables(modelo_info, feature_names, nombre_modelo, top_
 
     df_imp = pd.DataFrame({
         "Variable": feature_names,
-        "Importancia": importancias
+        "Importancia": importancias,
     }).sort_values(by="Importancia", ascending=False).head(top_n)
 
     plt.figure(figsize=(10, 7))
-    sns.barplot(data=df_imp, x="Importancia", y="Variable", palette="viridis", hue="Variable", legend=False)
+    sns.barplot(
+        data=df_imp,
+        x="Importancia",
+        y="Variable",
+        palette="viridis",
+        hue="Variable",
+        legend=False,
+    )
     plt.title(titulo)
     plt.xlabel("Importancia relativa")
     plt.ylabel("Caracteristica")
@@ -170,13 +150,9 @@ def graficarImportanciaVariables(modelo_info, feature_names, nombre_modelo, top_
 
 
 def imprimirReporteDetallado(nombre_modelo, y_test, y_pred):
-    """
-    Imprime el reporte de clasificacion completo en consola.
-    """
     print(f"=== Reporte de Clasificacion: {nombre_modelo} ===")
     print(classification_report(
         y_test,
         y_pred,
-        target_names=["No reincidente (0)", "Reincidente (1)"]
+        target_names=["No reincidente (0)", "Reincidente (1)"],
     ))
-    
